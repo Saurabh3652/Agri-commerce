@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/*
+  Farmer-friendly theme: high contrast (phones are used outdoors in sunlight).
+  brand-600, brand-700 and accent-400 are overridden at runtime with the CMS theme colours
+  (see lib/theme.ts); every other shade is mixed from them, so the whole palette follows the CMS.
+*/
+@theme {
+  --color-brand-600: #1f7a3a; /* CMS: primaryColor */
+  --color-brand-700: #17652f; /* CMS: primaryDarkColor */
+  --color-accent-400: #fbbf24; /* CMS: accentColor */
+
+  --color-brand-50: color-mix(in oklab, var(--color-brand-600) 8%, white);
+  --color-brand-100: color-mix(in oklab, var(--color-brand-600) 20%, white);
+  --color-brand-800: color-mix(in oklab, var(--color-brand-700) 82%, black);
+  --color-brand-900: color-mix(in oklab, var(--color-brand-700) 62%, black);
+  --color-accent-500: color-mix(in oklab, var(--color-accent-400) 88%, black);
+
+  --color-ink: #17221a;
+  --color-ink-muted: #4b5a4f;
+  --color-line: #dfe5df;
+  --color-warn: #b45309;
+  --color-surface: #f6f8f4;
+}
+
+@theme inline {
+  --font-sans: var(--font-noto-sans), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}

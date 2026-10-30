@@ -1,0 +1,30 @@
+# Local development database. In production point MONGODB_URI at MongoDB Atlas instead.
+services:
+  mongo:
+    image: mongo:8
+    container_name: agri-mongo
+    restart: unless-stopped
+    # Single-node replica set: MongoDB only allows multi-document transactions on a replica set,
+    # and placing an order needs one (reserve stock + create order must succeed or fail together).
+    # Atlas is always a replica set, so this matches production.
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27017:27017" # reachable from this computer only
+    volumes:
+      - agri-mongodata:/data/db
+    healthcheck:
+      # Initialises the replica set on first start; afterwards it only reports status.
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }).ok }",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+
+volumes:
+  agri-mongodata:
